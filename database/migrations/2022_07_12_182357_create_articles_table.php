@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
 
-            $table->string('original_link')->nullable();
+            $table->string('original_link')->unique();
             $table->string('original')->nullable();
 
             $table->integer('rating')->default(0);
