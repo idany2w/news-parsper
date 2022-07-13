@@ -17,16 +17,16 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
-            $table->string('meta_keywords')->nullable();
+            $table->text('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->text('meta_keywords')->nullable();
 
             $table->string('original_link')->nullable();
             $table->string('original')->nullable();
 
             $table->integer('rating')->default(0);
 
-            $table->string('content');
+            $table->text('content');
             $table->string('image')->nullable();
 
             $table->timestamps();
