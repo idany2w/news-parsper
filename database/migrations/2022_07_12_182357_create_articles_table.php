@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('original_link')->unique();
             $table->string('original')->nullable();
 
-            $table->integer('rating')->default(0);
+            $table->float('rating')->default(0);
 
             $table->text('content');
             $table->string('image')->nullable();
