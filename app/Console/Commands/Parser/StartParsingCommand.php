@@ -5,7 +5,7 @@ namespace App\Console\Commands\Parser;
 use App\Models\Article;
 use Illuminate\Console\Command;
 use \DiDom\Document;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
 class StartParsingCommand extends Command
@@ -70,7 +70,7 @@ class StartParsingCommand extends Command
             'original_link' => $link,
         ];
 
-        $title = $this->parseTitle($document);
+        $title = $this->parseTitle($document, $link);
 
         if($title == null){
             return null;
@@ -79,14 +79,14 @@ class StartParsingCommand extends Command
         }
 
         
-        $image = $this->parseImage($document);
+        $image = $this->parseImage($document, $link);
 
-        if($title !== null){
+        if($image !== null){
             $data['image'] = $image;
         }
 
 
-        $content = $this->parseContent($document);
+        $content = $this->parseContent($document, $link);
 
         if($content == null){
             return null;
@@ -94,7 +94,7 @@ class StartParsingCommand extends Command
             $data['content'] = $content;
         }
 
-        $rating = $this->parseRating($document);
+        $rating = $this->parseRating($document, $link);
 
         if($rating == null){
             return null;
@@ -124,7 +124,7 @@ class StartParsingCommand extends Command
         return $data;
     }
 
-    protected function parseTitle($document)
+    protected function parseTitle($document, $link)
     {
         $title = $document->first('.article .article__header__title h1.article__header__title-in');
         if(isset($title)){
@@ -135,14 +135,17 @@ class StartParsingCommand extends Command
         }
     }
 
-    protected function parseImage($document)
+    protected function parseImage($document, $link)
     {
-        $image = $document->first('.article .article__main-image img.g-image article__main-image__image');
+        $image = $document->first('.article .article__main-image img.g-image.article__main-image__image');
         if(isset($image)){
-            $data['image'] = $image->attr('src');
+            $src = $image->attr('src');
+            $filename = basename($src);
+            $r = Storage::put("articles/$filename", file_get_contents($src));
+            return $r ? "articles/$filename" : null;
         }
     }
-    protected function parseContent($document)
+    protected function parseContent($document, $link)
     {
         $content = $document->first('.article .article__text');
         if(isset($content)){
@@ -160,7 +163,7 @@ class StartParsingCommand extends Command
             return null;
         }
     }
-    protected function parseRating($document)
+    protected function parseRating($document, $link)
     {
         return random_int(1,10);
     }
@@ -168,7 +171,6 @@ class StartParsingCommand extends Command
     protected function saveResources()
     {
         $this->info('Start saving resources');
-
         Article::upsert($this->resources, ['original_link'], [
             'title',
             'meta_title',
@@ -180,7 +182,6 @@ class StartParsingCommand extends Command
             'content',
             'image',
         ]);
-
         $this->info('Done!');
     }
 
