@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\ArticlesResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
@@ -16,9 +17,14 @@ class ArticleController extends Controller
             'perPage' => 'integer',
         ]);
 
-        $perPage = $request->perPage;
+        $perPage = $request->perPage ?? 15;
 
-        return new ArticlesResource(Article::paginate($perPage));
+        $result = Article::paginate($perPage)->transform(function($item){
+            $item->content = Str::limit(strip_tags($item->content), 200);
+            return $item;
+        });
+
+        return new ArticlesResource($result);
     }
 
     public function show(Article $article)
