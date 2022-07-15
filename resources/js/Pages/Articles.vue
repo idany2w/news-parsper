@@ -86,7 +86,7 @@ export default {
         },
         deleteArticle(id){
 
-            let index = this.articles.findIndex(item => item.id === id);
+            let index = this.articles.findIndex(item => item.id == id);
             
             if(index != -1)
 
