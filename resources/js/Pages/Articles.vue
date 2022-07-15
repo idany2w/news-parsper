@@ -79,12 +79,9 @@ export default {
     flex-direction: column;
     padding: 16px;
     border: 1px #333 solid;
-<<<<<<< HEAD
 
     color: #333;
     text-decoration: none;
-=======
->>>>>>> bb7b42566ba44d85be5e79ec01da0a6427290091
 }
 
 .article__title{
