@@ -7,8 +7,8 @@
             <h1 class="articles__title">Articles</h1>
 
             <div class="">
-                <input type="number" class="button" min="1" max="10" v-model="newPerPage">
-                <button class="button button--fill" @click.prevent="updatePerpage">обновить</button>
+                <input type="number" class="button" min="1" max="10" v-model="perPage">
+                <button class="button button--fill" @click.prevent="updatePerpage">по сколько подгружать</button>
             </div>
 
             <div v-if="fetchArticlesError && articles.length == 0">
@@ -57,7 +57,7 @@ export default {
             articles: [],
             page: 0,
             perPage: 3,
-            newPerPage: null,
+
             fetchArticlesError: false
         }
     },
@@ -108,8 +108,8 @@ export default {
         },
         async updatePerpage(){
             this.page = 1;
-            this.perPage = +this.newPerPage;
-            this.newPerPage = null;
+
+
             this.articles = await this.fetchArticles();
         }
     },
