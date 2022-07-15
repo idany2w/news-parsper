@@ -85,12 +85,16 @@ export default {
             this.articles[id].attributes.rating = article.attributes.rating;
         },
         deleteArticle(id){
-            console.log(id)
-            let fid = this.articles.findIndex(item => item.id === id);
+
+            let index = this.articles.findIndex(item => item.id === id);
             
-            let arr = [...this.articles];
-            delete arr[fid];
-            this.articles = arr;
+            if(index != -1)
+
+            this.articles = this.articles.slice(index,1);
+            
+            
+
+
         },
         scroll () {
             const observer = new IntersectionObserver(async ()=>{
