@@ -30,21 +30,26 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         ArticleResource::withoutWrapping();
+
         return new ArticleResource($article);
     }
 
     public function delete(Article $article)
     {
-        return $article->delete();
+        $id = $article->id;
+        $article->delete();
+        return $id;
     }
 
     public function updateRating(Request $request, Article $article)
     {
         $request->validate([
-            'rating' => 'integer|in:-1,1',
+            'rating' => 'integer|min:1|max:10',
         ]);
 
         $rating = round(($article->rating + $request->rating)/2, 2);
+        if($rating > 10) $rating = 10;
+        if($rating < 1) $rating = 1;
         
         $article->update( [ 'rating' => $rating] );
         

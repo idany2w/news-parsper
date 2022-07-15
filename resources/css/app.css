@@ -1,3 +1,41 @@
 body{
     font-family: Arial, Helvetica, sans-serif
 }
+
+.container{
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.button{
+    display: inline-flex;
+    min-height: 16px;
+    padding: .8em 1.2em;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    
+
+    --button-bg-color: transparent;
+    --button-border-color: #000;
+    --button-color: #000;
+
+    --button-bg-color-fill: #000;
+    --button-color-fill: #fff;
+
+    background-color: var(--button-bg-color);
+    border: var(--button-border-color) 1px solid;
+    color: var(--button-color);
+}
+
+.button--fill{
+    background-color: var(--button-bg-color-fill);
+    color: var(--button-color-fill);
+}
+
+.button--color-red{
+    --button-border-color: red;
+    --button-color: red;
+    --button-bg-color-fill: red;
+}

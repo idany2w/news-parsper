@@ -8,14 +8,14 @@ use \DiDom\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
-class StartParsingCommand extends Command
+class ParsingCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'parsing:rbc';
+    protected $signature = 'parsing:default';
 
     /**
      * The console command description.
@@ -24,10 +24,9 @@ class StartParsingCommand extends Command
      */
     protected $description = 'Command description';
 
-    protected $original = 'rbc';
-    protected $start_link = 'https://www.rbc.ru/';
+    protected $original = 'example';
+    protected $start_link = 'https://www.example.ru/';
     protected $resources = null;
-
     
 
     protected function superTrim($str){
@@ -36,16 +35,10 @@ class StartParsingCommand extends Command
 
     protected function parseLinks()
     {
-        $this->info("get : {$this->start_link}");
-        $response = Http::get($this->start_link);
-        $html = $response->body();
-        $document = new Document($html);
-        $items = $document->find('.js-news-feed-list > a.news-feed__item');
-        $links = [];
-
-        foreach ($items as $item) {
-            $links[] = $item->attr('href');
-        }
+        $links = [
+            'some parsed link',
+            'some parsed link',
+        ];
 
         return $links;
     }
@@ -217,5 +210,6 @@ class StartParsingCommand extends Command
         $this->resources = $resources;
         $this->saveResources();
 
+        echo "parsed ". count($resources) ." resources";
     }
 }

@@ -25,7 +25,7 @@ class ArticleResource extends JsonResource
                 'meta_keywords' => $this->meta_keywords,
                 'rating' => $this->rating,
                 'content' => $this->content,
-                'image' => $this->image ? url(Storage::url($this->image)) : null,
+                'image' => $this->image ? Storage::disk('public')->url($this->image) : null,
             ],
             'links'         => [
                 'self' => route('articles.show', ['article' => $this->id]),

@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('parsing:start rbc')->everyTenMinutes();
+        $schedule->command('parsing:rbc')->everyMinute();
     }
 
     /**

@@ -17,10 +17,17 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Articles', []);
-});
+})->name('home');
 
-Route::get('/articles/{id}', function ($id) {
+
+Route::get('/articles', function () {
+    return Inertia::render('Articles', []);
+})->name('articles.index');
+
+Route::get('/articles/{article}', function (App\Models\Article $article) {
+    App\Http\Resources\ArticleResource::withoutWrapping();
+    
     return Inertia::render('Article', [
-        'id' => (int) $id
+        'article' => new App\Http\Resources\ArticleResource($article)
     ]);
-});
+})->name('articles.show');
