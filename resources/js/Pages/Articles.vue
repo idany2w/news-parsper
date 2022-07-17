@@ -97,7 +97,7 @@ export default {
         },
         deleteArticle(id){
             let index = this.articles.findIndex(item => item.id == id);
-            if(index != -1) this.articles.slice(index, 1);
+            if(index !== -1) this.articles.splice(index, 1);
         },
         async updatePerpage(){
             this.page = 1;
