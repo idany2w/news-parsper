@@ -119,6 +119,7 @@ export default {
 
             this.intervalId = setInterval(async ()=>{
                 // TODO: сделать метод "Показать (n) yновых записей"
+                this.page = 1;
                 this.articles = await this.fetchArticles();
             }, this.interval * 1000)
         },
