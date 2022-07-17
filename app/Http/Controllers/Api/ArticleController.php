@@ -15,11 +15,12 @@ class ArticleController extends Controller
     {
         $request->validate([
             'perPage' => 'integer',
+            'from' => 'date',
         ]);
 
         $perPage = $request->perPage ?? 15;
 
-        $result = Article::paginate($perPage)->transform(function($item){
+        $result = Article::orderBy('created_at', 'desc')->paginate($perPage)->transform(function($item){
             $item->content = Str::limit(strip_tags($item->content), 200);
             return $item;
         });
