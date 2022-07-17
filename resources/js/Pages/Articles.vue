@@ -6,15 +6,23 @@
 
             <h1 class="articles__title">Articles</h1>
 
-            <div class="">
-                <input type="number" class="button" min="1" max="10" v-model="perPage">
-                <button class="button button--fill" @click.prevent="updatePerpage">по сколько подгружать</button>
+            <div class="articles__controls">
+                <div class="articles__control">
+                    <p>По сколько подгружать</p>
+                    <input type="number" class="input" min="5" max="10" v-model="perPage">
+                    <button class="button button--fill" @click.prevent="updatePerpage">Изменить</button>
+                </div>
+                <div class="articles__control">
+                    <p>Интервал обновления</p>
+                    <input type="number" class="input" min="5"  v-model="interval">
+                    <button class="button button--fill" @click.prevent="updateInterval">Изменить</button>
+                </div>
             </div>
 
             <div v-if="fetchArticlesError && articles.length == 0">
                 Мы пока не можем отобразить для вас статьи
             </div>
-            <div v-else class="articles__list" >
+            <div v-else class="articles__list" id="observer-list">
                 <Article 
                     v-for="(item, index) in articles"
                     :key="index"
@@ -56,9 +64,11 @@ export default {
         return {
             articles: [],
             page: 0,
-            perPage: 3,
-
-            fetchArticlesError: false
+            perPage: 5,
+            interval: 60,
+            intervalId: null,
+            observer: null,
+            fetchArticlesError: false,
         }
     },
     methods: {
@@ -85,43 +95,53 @@ export default {
             this.articles[id].attributes.rating = article.attributes.rating;
         },
         deleteArticle(id){
-
             let index = this.articles.findIndex(item => item.id == id);
-            
-            if(index != -1)
-
-            this.articles = this.articles.slice(index,1);
-            
-            
-
-
+            if(index != -1) this.articles.slice(index, 1);
         },
-        scroll () {
-            const observer = new IntersectionObserver(async ()=>{
+        async updatePerpage(){
+            this.page = 1;
+
+            if(this.perPage < 5){
+                this.perPage = 5;
+            }
+
+            this.articles = await this.fetchArticles(this.page);
+        },
+        updateInterval(){
+            if(this.intervalId !== null){
+                clearInterval(this.intervalId);
+            }
+
+            if(this.interval < 5){
+                this.interval = 5;
+            }
+
+            this.intervalId = setInterval(async ()=>{
+                this.articles = await this.fetchArticles();
+            }, this.interval * 1000)
+        },
+        initObserver(){
+            const loader = document.querySelector("#loader");
+            
+            this.observer = new IntersectionObserver(async ()=>{
                 this.articles.push(...(await this.fetchArticles(++this.page)));
             }, {
                 rootMargin: "50px",
             });
 
-            const loader = document.querySelector("#loader");
-            observer.observe(loader);
-        },
-        async updatePerpage(){
-            this.page = 1;
-
-
-            this.articles = await this.fetchArticles();
+            this.$nextTick(() => {
+                this.observer.observe(loader);
+            });
         }
     },
     async created(){
-        this.articles = await this.fetchArticles();
-
-        setInterval(async ()=>{
-            this.articles = await this.fetchArticles();
-        }, 30000)
+        this.updateInterval();
     },
     mounted() {
-        this.scroll();
+        this.initObserver();
+    },
+    destroyed() {
+        this.observer.disconnect();
     }
 }
 </script>
@@ -141,5 +161,12 @@ export default {
     gap: 20px;
     
     padding: 20px 0;
+}
+
+.articles__controls{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
 }
 </style>

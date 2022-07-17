@@ -2,13 +2,17 @@ body{
     font-family: Arial, Helvetica, sans-serif
 }
 
+*, *::before, *::after{
+    box-sizing: border-box;
+}
+
 .container{
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
 }
 
-.button{
+.button, .input{
     display: inline-flex;
     min-height: 16px;
     padding: .8em 1.2em;
@@ -29,12 +33,12 @@ body{
     color: var(--button-color);
 }
 
-.button--fill{
+.button--fill, .input--fill{
     background-color: var(--button-bg-color-fill);
     color: var(--button-color-fill);
 }
 
-.button--color-red{
+.button--color-red, .input--color-red{
     --button-border-color: red;
     --button-color: red;
     --button-bg-color-fill: red;
