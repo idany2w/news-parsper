@@ -64,6 +64,7 @@ export default {
         return {
             articles: [],
             page: 0,
+            // TODO: сохранять perPage и interval в localstorage
             perPage: 5,
             interval: 60,
             intervalId: null,
@@ -117,6 +118,7 @@ export default {
             }
 
             this.intervalId = setInterval(async ()=>{
+                // TODO: сделать метод "Показать (n) yновых записей"
                 this.articles = await this.fetchArticles();
             }, this.interval * 1000)
         },
